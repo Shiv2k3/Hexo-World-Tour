@@ -11,9 +11,9 @@ namespace Core.Player
         [SerializeField] private float maxSpeed = 10.0f;
         [SerializeField] private float terminalSpeed = 10.0f;
         [Header("--------RigidBody")]
-        [SerializeField] private float maxTorque = 7.0f;
         [SerializeField] private float drag = 0.20f;
         [SerializeField] private float mass = 2.0f;
+        [SerializeField, Range(0,1)] private float maxSlope = 0.75f;
         [Space, Header("--------Acceleration")]
         [SerializeField] private float accelSpeed = 0.5f;
         [SerializeField] private float maxAccel = 1.5f;
@@ -31,7 +31,6 @@ namespace Core.Player
 
         public bool Grounded { get; private set; }
         public Vector3 CheckPoint { get; set; }
-
 
         void Awake()
         {
@@ -52,7 +51,7 @@ namespace Core.Player
         {
             // Find platform(if any), and set Grounded
             Ray downRay = new Ray(transform.position, Vector3.down);
-            bool rayHit = Physics.Raycast(downRay, out RaycastHit hitInfo, float.MaxValue, groundLayers);
+            Physics.Raycast(downRay, out RaycastHit hitInfo, float.MaxValue, groundLayers);
             if (hitInfo.transform && hitInfo.distance < rayLength)
             {
                 platform = hitInfo.transform.gameObject.GetComponent<Platform>();
@@ -62,7 +61,6 @@ namespace Core.Player
             {
                 platform = hitInfo.transform.gameObject.GetComponent<Platform>();
                 Grounded = false;
-                rayHit = false;
             }
             else
             {
@@ -96,14 +94,18 @@ namespace Core.Player
                     }
 
                     // Move
-                    Vector3 direction = Quaternion.FromToRotation(Vector3.up, rayHit ? hitInfo.normal  : Vector3.up) * Vector3.right;
+                    Vector3 direction = Vector3.zero;
+                    if(Grounded)
+                    {
+                        direction = Quaternion.FromToRotation(Vector3.up, hitInfo.normal) * Vector3.right;
+                        if (hitInfo.normal.x < 0) direction.x *= hitInfo.normal.y > maxSlope ? 1 : -1;
+                    }
                     Vector3 force = Time.deltaTime * speed * direction;
-                    float accelration = accel.x * accel.x;
-                    force = Vector3.ClampMagnitude(force, maxSpeed - rb.velocity.magnitude) * accelration;
+                    Vector3 accelration = Time.deltaTime * accel.x * accel.x * Vector3.right;
+                    force = Vector3.ClampMagnitude(force, maxSpeed - rb.velocity.magnitude) + accelration;
                     rb.AddForce(force, ForceMode.Impulse);
                     rb.AddTorque(Vector3.back * force.magnitude);
-
-}
+                }
                 else
                 {
                     // Decelerate
@@ -128,13 +130,17 @@ namespace Core.Player
                     }
 
                     // Move
-                    Vector3 direction = Quaternion.FromToRotation(Vector3.up, rayHit ? hitInfo.normal : Vector3.up) * Vector3.left;
+                    Vector3 direction = Vector3.zero;
+                    if (Grounded)
+                    {
+                        direction = Quaternion.FromToRotation(Vector3.up, hitInfo.normal) * Vector3.left;
+                        if (hitInfo.normal.x > 0) direction.x *= hitInfo.normal.y > maxSlope ? 1 : -1;
+                    }
                     Vector3 force = Time.deltaTime * speed * direction;
-                    float accelration = accel.y * accel.y;
-                    force = Vector3.ClampMagnitude(force, maxSpeed - rb.velocity.magnitude) * accelration;
+                    Vector3 accelration = Time.deltaTime * accel.x * accel.x * Vector3.left;
+                    force = Vector3.ClampMagnitude(force, maxSpeed - rb.velocity.magnitude) + accelration;
                     rb.AddForce(force, ForceMode.Impulse);
                     rb.AddTorque(Vector3.forward * force.magnitude);
-
                 }
                 else
                 {
@@ -153,9 +159,6 @@ namespace Core.Player
                     lastJumped = Time.time;
                 }
             }
-
-            // Torque
-            rb.maxAngularVelocity = maxTorque * rb.velocity.magnitude;
         }
 
         public void Respawn()
@@ -163,6 +166,7 @@ namespace Core.Player
             rb.velocity = Vector3.zero;
             rb.angularVelocity = Vector3.zero;
             transform.position = CheckPoint;
+            accel = Vector2.zero;
         }
     }
 }

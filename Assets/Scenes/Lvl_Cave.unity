@@ -253,7 +253,12 @@ PrefabInstance:
     - target: {fileID: 6407571711436066897, guid: 55752e7714ffa804c82a797a1c69874e,
         type: 3}
       propertyPath: maxAccel
-      value: 0.65
+      value: 1.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 6407571711436066897, guid: 55752e7714ffa804c82a797a1c69874e,
+        type: 3}
+      propertyPath: maxSlope
+      value: 0.8
       objectReference: {fileID: 0}
     - target: {fileID: 6407571711436066897, guid: 55752e7714ffa804c82a797a1c69874e,
         type: 3}
@@ -273,7 +278,7 @@ PrefabInstance:
     - target: {fileID: 6407571711436066897, guid: 55752e7714ffa804c82a797a1c69874e,
         type: 3}
       propertyPath: rayLength
-      value: 0.225
+      value: 0.25
       objectReference: {fileID: 0}
     - target: {fileID: 6407571711436066897, guid: 55752e7714ffa804c82a797a1c69874e,
         type: 3}
