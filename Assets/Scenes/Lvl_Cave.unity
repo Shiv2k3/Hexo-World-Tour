@@ -205,6 +205,16 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: -834526484767315526, guid: 55752e7714ffa804c82a797a1c69874e,
+        type: 3}
+      propertyPath: m_Convex
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -834526484767315526, guid: 55752e7714ffa804c82a797a1c69874e,
+        type: 3}
+      propertyPath: m_IsTrigger
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: -442157694970045139, guid: 55752e7714ffa804c82a797a1c69874e,
         type: 3}
       propertyPath: m_Layer
@@ -414,7 +424,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 755186443}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: -10}
+  m_LocalPosition: {x: -89.9, y: -16.3, z: -3.7}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -467,8 +477,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 48115f7c519be0449b2e9ab613ccc5b7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 0}
-  offset: {x: 0, y: 1.5, z: -5}
+  player: {fileID: 1254017442}
+  offset: {x: -3.44, y: 3, z: -7}
   smoothing: 0.35
 --- !u!1 &1077939709
 GameObject:
@@ -519,6 +529,18 @@ MonoBehaviour:
   blendDistance: 0
   weight: 1
   sharedProfile: {fileID: 11400000, guid: a6560a915ef98420e9faacc1c7438823, type: 2}
+--- !u!114 &1254017442 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6407571711436066897, guid: 55752e7714ffa804c82a797a1c69874e,
+    type: 3}
+  m_PrefabInstance: {fileID: 331316988}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a5c78db12af2f2344b7c2c119519511c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1585033077
 GameObject:
   m_ObjectHideFlags: 0

@@ -10,22 +10,28 @@ namespace Core.Player
         [SerializeField] private float speed = 10.0f;
         [SerializeField] private float maxSpeed = 10.0f;
         [SerializeField] private float terminalSpeed = 10.0f;
+
         [Header("--------RigidBody")]
         [SerializeField] private float drag = 0.20f;
         [SerializeField] private float mass = 2.0f;
         [SerializeField, Range(0,1)] private float maxSlope = 0.75f;
+
         [Space, Header("--------Acceleration")]
         [SerializeField] private float accelSpeed = 0.5f;
         [SerializeField] private float maxAccel = 1.5f;
+
         [Space, Header("--------Jumping")]
         [SerializeField] private float jumpForce = 1.5f;
         [SerializeField] private float jumpCooldown = 0.35f;
+        [SerializeField] private float platformExitSmoothness = 0.5f;
+
         [Space, Header("--------Raycast")]
         [SerializeField] private float rayLength = 0.09f;
         [SerializeField] private LayerMask groundLayers;
 
         private Rigidbody rb;
         private Platform platform;
+        private Vector3 lastPlatformVelocity;
         private float lastJumped;
         private Vector2 accel = Vector2.one;
 
@@ -72,13 +78,18 @@ namespace Core.Player
             if (platform)
             {
                 rb.position += platform.Velocity;
+                lastPlatformVelocity = platform.Velocity;
+            }
+            else
+            {
+                rb.position += lastPlatformVelocity = Vector3.Lerp(lastPlatformVelocity, Vector3.zero, platformExitSmoothness);
             }
 
             // Horizontal movement
             if (rb.velocity.magnitude < terminalSpeed)
             {
                 // Move right
-                if (Input.GetKey(KeyCode.D) && !Input.GetKey(KeyCode.A))
+                if (Input.GetKey(KeyCode.D))
                 {
                     // Accel
                     if (Input.GetKey(KeyCode.LeftShift))
@@ -137,7 +148,7 @@ namespace Core.Player
                         if (hitInfo.normal.x > 0) direction.x *= hitInfo.normal.y > maxSlope ? 1 : -1;
                     }
                     Vector3 force = Time.deltaTime * speed * direction;
-                    Vector3 accelration = Time.deltaTime * accel.x * accel.x * Vector3.left;
+                    Vector3 accelration = Time.deltaTime * accel.y * accel.y * Vector3.left;
                     force = Vector3.ClampMagnitude(force, maxSpeed - rb.velocity.magnitude) + accelration;
                     rb.AddForce(force, ForceMode.Impulse);
                     rb.AddTorque(Vector3.forward * force.magnitude);
