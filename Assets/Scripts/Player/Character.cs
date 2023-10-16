@@ -52,7 +52,7 @@ namespace Core.Player
         {
             // Find platform(if any), and set Grounded
             Ray downRay = new Ray(transform.position, Vector3.down);
-            Physics.Raycast(downRay, out RaycastHit hitInfo, float.MaxValue, groundLayers);
+            bool rayHit = Physics.Raycast(downRay, out RaycastHit hitInfo, float.MaxValue, groundLayers);
             if (hitInfo.transform && hitInfo.distance < rayLength)
             {
                 platform = hitInfo.transform.gameObject.GetComponent<Platform>();
@@ -62,6 +62,7 @@ namespace Core.Player
             {
                 platform = hitInfo.transform.gameObject.GetComponent<Platform>();
                 Grounded = false;
+                rayHit = false;
             }
             else
             {
@@ -95,7 +96,7 @@ namespace Core.Player
                     }
 
                     // Move
-                    Vector3 direction = Quaternion.FromToRotation(Vector3.up, hitInfo.normal) * Vector3.right;
+                    Vector3 direction = Quaternion.FromToRotation(Vector3.up, rayHit ? hitInfo.normal  : Vector3.up) * Vector3.right;
                     Vector3 force = Time.deltaTime * speed * direction;
                     float accelration = accel.x * accel.x;
                     force = Vector3.ClampMagnitude(force, maxSpeed - rb.velocity.magnitude) * accelration;
@@ -127,7 +128,7 @@ namespace Core.Player
                     }
 
                     // Move
-                    Vector3 direction = Quaternion.FromToRotation(Vector3.up, hitInfo.normal) * Vector3.left;
+                    Vector3 direction = Quaternion.FromToRotation(Vector3.up, rayHit ? hitInfo.normal : Vector3.up) * Vector3.left;
                     Vector3 force = Time.deltaTime * speed * direction;
                     float accelration = accel.y * accel.y;
                     force = Vector3.ClampMagnitude(force, maxSpeed - rb.velocity.magnitude) * accelration;
