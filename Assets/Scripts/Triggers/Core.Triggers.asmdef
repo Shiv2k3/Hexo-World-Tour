@@ -1,0 +1,18 @@
+{
+    "name": "Core.Triggers",
+    "rootNamespace": "Core.Triggers",
+    "references": [
+        "GUID:6bf5b7bfac027ef4089811ce00dab4ec"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [
+        ""
+    ],
+    "autoReferenced": false,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
