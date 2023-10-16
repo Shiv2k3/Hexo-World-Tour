@@ -118,7 +118,7 @@ namespace Core.Player
                     if (Input.GetKey(KeyCode.LeftShift))
                     {
                         accel.y += accelSpeed;
-                        accel.y = Mathf.Clamp(accel.y, 1, 1 + maxAccel);
+                        accel.y = Mathf.Clamp(accel.y, 1, 1 + maxAccel); 
                     }
                     else
                     {
