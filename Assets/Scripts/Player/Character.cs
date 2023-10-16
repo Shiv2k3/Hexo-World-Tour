@@ -38,6 +38,16 @@ namespace Core.Player
         public bool Grounded { get; private set; }
         public Vector3 CheckPoint { get; set; }
 
+        public void Respawn()
+        {
+            rb.velocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
+            transform.position = CheckPoint;
+            accel = Vector2.zero;
+            lastPlatformVelocity = Vector3.zero;
+            lastJumped = 0;
+        }
+
         void Awake()
         {
             gameObject.AddComponent<MeshCollider>().convex = true;
@@ -170,14 +180,6 @@ namespace Core.Player
                     lastJumped = Time.time;
                 }
             }
-        }
-
-        public void Respawn()
-        {
-            rb.velocity = Vector3.zero;
-            rb.angularVelocity = Vector3.zero;
-            transform.position = CheckPoint;
-            accel = Vector2.zero;
         }
     }
 }
