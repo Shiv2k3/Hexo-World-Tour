@@ -14,6 +14,7 @@ namespace Core.Player
         [Header("--------RigidBody")]
         [SerializeField] private float drag = 0.20f;
         [SerializeField] private float mass = 2.0f;
+        [SerializeField] private float maxTorque = 3f;
         [SerializeField, Range(0,1)] private float maxSlope = 0.75f;
 
         [Space, Header("--------Acceleration")]
@@ -23,25 +24,30 @@ namespace Core.Player
         [Space, Header("--------Jumping")]
         [SerializeField] private float jumpForce = 1.5f;
         [SerializeField] private float jumpCooldown = 0.35f;
-        [SerializeField] private float platformExitSmoothness = 0.5f;
+
+        [Space, Header("--------Exiting Platforms")]
+        [SerializeField] private float exitSmoothness = 0.01f;
+        [SerializeField] private Vector2 exitMagnitudeRange = Vector2.up;
 
         [Space, Header("--------Raycast")]
         [SerializeField] private float rayLength = 0.09f;
         [SerializeField] private LayerMask groundLayers;
+        [SerializeField] private LayerMask waterLayer;
 
-        private Rigidbody rb;
+        [HideInInspector] public Rigidbody rigidBody;
         private Platform platform;
         private Vector3 lastPlatformVelocity;
         private float lastJumped;
         private Vector2 accel = Vector2.one;
 
         public bool Grounded { get; private set; }
+        public RaycastHit HitInfo { get; private set; }
         public Vector3 CheckPoint { get; set; }
 
         public void Respawn()
         {
-            rb.velocity = Vector3.zero;
-            rb.angularVelocity = Vector3.zero;
+            rigidBody.velocity = Vector3.zero;
+            rigidBody.angularVelocity = Vector3.zero;
             transform.position = CheckPoint;
             accel = Vector2.zero;
             lastPlatformVelocity = Vector3.zero;
@@ -51,11 +57,12 @@ namespace Core.Player
         void Awake()
         {
             gameObject.AddComponent<MeshCollider>().convex = true;
-            rb = gameObject.AddComponent<Rigidbody>();
-            rb.constraints = RigidbodyConstraints.FreezePositionZ | RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY;
+            rigidBody = gameObject.AddComponent<Rigidbody>();
+            rigidBody.constraints = RigidbodyConstraints.FreezePositionZ | RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY;
            
-            rb.drag = drag;
-            rb.mass = mass;
+            rigidBody.drag = drag;
+            rigidBody.mass = mass;
+            rigidBody.maxAngularVelocity = maxTorque;
         }
 
         private void Start()
@@ -83,20 +90,24 @@ namespace Core.Player
                 platform = null;
                 Grounded = false;
             }
+            HitInfo = hitInfo;
 
             // Platform force
             if (platform)
             {
-                rb.position += platform.Velocity;
+                rigidBody.position += platform.Velocity;
                 lastPlatformVelocity = platform.Velocity;
             }
             else
             {
-                rb.position += lastPlatformVelocity = Vector3.Lerp(lastPlatformVelocity, Vector3.zero, platformExitSmoothness);
+                lastPlatformVelocity = Vector3.Lerp(lastPlatformVelocity, Vector3.zero, exitSmoothness);
+                float mag = lastPlatformVelocity.magnitude;
+                if (mag > exitMagnitudeRange.x && mag < exitMagnitudeRange.y)
+                    rigidBody.position += lastPlatformVelocity;
             }
 
             // Horizontal movement
-            if (rb.velocity.magnitude < terminalSpeed)
+            if (rigidBody.velocity.magnitude < terminalSpeed)
             {
                 // Move right
                 if (Input.GetKey(KeyCode.D))
@@ -123,9 +134,8 @@ namespace Core.Player
                     }
                     Vector3 force = Time.deltaTime * speed * direction;
                     Vector3 accelration = Time.deltaTime * accel.x * accel.x * Vector3.right;
-                    force = Vector3.ClampMagnitude(force, maxSpeed - rb.velocity.magnitude) + accelration;
-                    rb.AddForce(force, ForceMode.Impulse);
-                    rb.AddTorque(Vector3.back * force.magnitude);
+                    force = Vector3.ClampMagnitude(force, maxSpeed - rigidBody.velocity.magnitude) + accelration;
+                    rigidBody.AddForce(force, ForceMode.Impulse);
                 }
                 else
                 {
@@ -159,9 +169,8 @@ namespace Core.Player
                     }
                     Vector3 force = Time.deltaTime * speed * direction;
                     Vector3 accelration = Time.deltaTime * accel.y * accel.y * Vector3.left;
-                    force = Vector3.ClampMagnitude(force, maxSpeed - rb.velocity.magnitude) + accelration;
-                    rb.AddForce(force, ForceMode.Impulse);
-                    rb.AddTorque(Vector3.forward * force.magnitude);
+                    force = Vector3.ClampMagnitude(force, maxSpeed - rigidBody.velocity.magnitude) + accelration;
+                    rigidBody.AddForce(force, ForceMode.Impulse);
                 }
                 else
                 {
@@ -176,10 +185,13 @@ namespace Core.Player
             {
                 if ((Time.time - lastJumped) > jumpCooldown && Input.GetKey(KeyCode.Space))
                 {
-                    rb.AddForce(hitInfo.normal * jumpForce, ForceMode.Impulse);
+                    rigidBody.AddForce(hitInfo.normal * jumpForce, ForceMode.Impulse);
                     lastJumped = Time.time;
                 }
             }
+
+            // Torque
+            rigidBody.maxAngularVelocity = maxTorque + Mathf.Abs(rigidBody.velocity.x);
         }
     }
 }

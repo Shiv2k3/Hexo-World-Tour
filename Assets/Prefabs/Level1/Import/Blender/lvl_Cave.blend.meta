@@ -3,7 +3,37 @@ guid: 5457726432b52574e9579c05817f6f5d
 ModelImporter:
   serializedVersion: 21300
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: CheckPoint
+    second: {fileID: 2100000, guid: 9c201979d0489cc4ea4aca50c3778eee, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Collider
+    second: {fileID: 2100000, guid: ed35da052e09e7d439a4dec4647c1bfa, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Die
+    second: {fileID: 2100000, guid: b02d3e9cebee02a479e404320d57b71c, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Lava
+    second: {fileID: 2100000, guid: 3cdae647c79b3d64abd557907ce621cb, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Rock
+    second: {fileID: 2100000, guid: 7712effc8aa2bde419fe4e2346f24dd1, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Water
+    second: {fileID: 2100000, guid: 7ed37d1656823e0449ffdb1e9353c2a6, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0

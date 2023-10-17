@@ -31,18 +31,22 @@ namespace Core.Editor
                     mc.isTrigger = true;
                 }
 
-                GameObject.DestroyImmediate(g.GetComponent<MeshRenderer>());
-                GameObject.DestroyImmediate(g.GetComponent<MeshFilter>());
+                if(!spr)
+                {
+                    GameObject.DestroyImmediate(g.GetComponent<MeshRenderer>());
+                    GameObject.DestroyImmediate(g.GetComponent<MeshFilter>());
+                }
             }
+
 
 
             if (player) g.AddComponent<Player.Character>();
             if (platform) g.AddComponent<Platforms.Platform>();
             if (solid) g.AddComponent<MeshCollider>();
-            if(chk) g.AddComponent<Triggers.CheckPoint>();
-            if(win) g.AddComponent<Triggers.Win>();
-            if(die) g.AddComponent<Triggers.Die>();
-            if(spr) g.AddComponent<Triggers.Spring>();
+            if (chk) g.AddComponent<Triggers.CheckPoint>();
+            if (win) g.AddComponent<Triggers.Win>();
+            if (die) g.AddComponent<Triggers.Die>();
+            if (spr) g.AddComponent<Triggers.Spring>();
         }
 
     }
