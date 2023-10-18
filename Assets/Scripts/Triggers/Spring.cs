@@ -9,6 +9,7 @@ namespace Core.Triggers
         [SerializeField] private float buoyancyForce = 1f;
 
         private bool dragApplied;
+        private float timeUnder;
         private void FixedUpdate()
         {
             if (player)
@@ -22,17 +23,16 @@ namespace Core.Triggers
                 }
 
                 // Buoyancy
-                if (player.transform.position.y <= transform.position.y)
+                float difference = transform.position.y - player.transform.position.y;
+                if (player.rigidBody.velocity.y < difference + maxVelocity)
                 {
-                    if (player.rigidBody.velocity.y < maxVelocity)
-                    {
-                        float difference = Mathf.Abs(player.transform.position.y - transform.position.y);
-                        player.rigidBody.AddForce(buoyancyForce * difference * Vector3.up, ForceMode.Impulse);
-                    }
+                    player.rigidBody.AddForce(buoyancyForce * timeUnder * difference * Vector3.up, ForceMode.Impulse);
+                    timeUnder += Time.deltaTime;
                 }
             }
             else
             {
+                timeUnder = 0;
                 if (dragApplied)
                 {
                     lastPlayer.rigidBody.drag -= drag;

@@ -12,41 +12,42 @@ namespace Core.Editor
                 OnPostprocessMeshHierarchy(child.gameObject);
             }
 
-            bool chk = g.name.Contains("chk_");
+            bool checkPoint = g.name.Contains("chk_");
             bool win = g.name.Contains("win_");
             bool die = g.name.Contains("die_");
-            bool spr = g.name.Contains("spr_");
-            bool col = g.name.Contains("col_");
+            bool spring = g.name.Contains("spr_");
+            bool collider = g.name.Contains("col_");
+            bool trap = g.name.Contains("trp_");
 
             bool solid = g.name.Contains("solid_");
             bool player = g.name.Contains("player_");
             bool platform = g.name.Contains("platform_");
 
-            if (win || die || chk || spr || col)
+            if (win || die || checkPoint || spring || collider || trap)
             {
                 var mc = g.AddComponent<MeshCollider>();
-                if (!col)
+                if (!collider)
                 {
                     mc.convex = true;
                     mc.isTrigger = true;
                 }
 
-                if(!spr)
+                if (checkPoint || win || trap)
                 {
                     GameObject.DestroyImmediate(g.GetComponent<MeshRenderer>());
                     GameObject.DestroyImmediate(g.GetComponent<MeshFilter>());
                 }
             }
 
-
-
             if (player) g.AddComponent<Player.Character>();
             if (platform) g.AddComponent<Platforms.Platform>();
             if (solid) g.AddComponent<MeshCollider>();
-            if (chk) g.AddComponent<Triggers.CheckPoint>();
+            if (checkPoint) g.AddComponent<Triggers.CheckPoint>();
             if (win) g.AddComponent<Triggers.Win>();
             if (die) g.AddComponent<Triggers.Die>();
-            if (spr) g.AddComponent<Triggers.Spring>();
+            if (spring) g.AddComponent<Triggers.Spring>();
+            if (trap) g.AddComponent<Triggers.Trap>();
+
         }
 
     }

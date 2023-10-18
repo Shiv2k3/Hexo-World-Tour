@@ -2,7 +2,7 @@ namespace Core.Triggers
 {
     public class Die : Trigger
     {
-        private void Update()
+        private void FixedUpdate()
         {
             if(player)
             {

@@ -1,6 +1,6 @@
 using UnityEngine;
 using Core.Platforms;
-using UnityEditor;
+using System.Collections;
 
 namespace Core.Player
 {
@@ -40,18 +40,37 @@ namespace Core.Player
         private float lastJumped;
         private Vector2 accel = Vector2.one;
 
+        public bool Dead { get; private set; }
         public bool Grounded { get; private set; }
         public RaycastHit HitInfo { get; private set; }
         public Vector3 CheckPoint { get; set; }
 
         public void Respawn()
         {
+            StartCoroutine(WaitRespawn());
+        }
+        private IEnumerator WaitRespawn()
+        {
+            Dead = true;
+
+            Toggle();
+            yield return new WaitForSeconds(5);
+            Toggle();
+
+            transform.position = CheckPoint;
             rigidBody.velocity = Vector3.zero;
             rigidBody.angularVelocity = Vector3.zero;
-            transform.position = CheckPoint;
             accel = Vector2.zero;
             lastPlatformVelocity = Vector3.zero;
             lastJumped = 0;
+
+            Dead = false;
+        }
+        private void Toggle()
+        {
+            GetComponent<MeshRenderer>().enabled = !GetComponent<MeshRenderer>().enabled;
+            GetComponent<Collider>().enabled = !GetComponent<Collider>().enabled;
+            GetComponent<Rigidbody>().isKinematic = !GetComponent<Rigidbody>().isKinematic;
         }
 
         void Awake()
@@ -72,6 +91,8 @@ namespace Core.Player
 
         void FixedUpdate()
         {
+            if (Dead) return;
+
             // Find platform(if any), and set Grounded
             Ray downRay = new Ray(transform.position, Vector3.down);
             Physics.Raycast(downRay, out RaycastHit hitInfo, float.MaxValue, groundLayers);
@@ -136,6 +157,7 @@ namespace Core.Player
                     Vector3 accelration = Time.deltaTime * accel.x * accel.x * Vector3.right;
                     force = Vector3.ClampMagnitude(force, maxSpeed - rigidBody.velocity.magnitude) + accelration;
                     rigidBody.AddForce(force, ForceMode.Impulse);
+                    rigidBody.AddTorque(Vector3.forward * -force.x, ForceMode.Impulse);
                 }
                 else
                 {
@@ -171,6 +193,7 @@ namespace Core.Player
                     Vector3 accelration = Time.deltaTime * accel.y * accel.y * Vector3.left;
                     force = Vector3.ClampMagnitude(force, maxSpeed - rigidBody.velocity.magnitude) + accelration;
                     rigidBody.AddForce(force, ForceMode.Impulse);
+                    rigidBody.AddTorque(Vector3.forward * -force.x, ForceMode.Impulse);
                 }
                 else
                 {
