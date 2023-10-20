@@ -64,6 +64,7 @@ sysinfo.txt
 
 # Models
 *.fbx
+*.png
 
 # Crashlytics generated file
 crashlytics-build.properties
