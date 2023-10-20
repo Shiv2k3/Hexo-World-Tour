@@ -11,10 +11,6 @@ namespace Core.Triggers
         {
             player = other.gameObject.GetComponent<Character>();
         }
-        private void OnTriggerStay(Collider other)
-        {
-            player = other.gameObject.GetComponent<Character>();
-        }
         private void OnTriggerExit(Collider other)
         {
             player = other.gameObject.GetComponent<Character>();

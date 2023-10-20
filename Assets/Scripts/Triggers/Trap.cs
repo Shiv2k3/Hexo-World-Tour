@@ -15,8 +15,7 @@ namespace Core.Triggers
                 child.gameObject.AddComponent<MeshCollider>().convex = true;
                 child.gameObject.AddComponent<Die>();
                 
-                var rb = child.gameObject.AddComponent<Rigidbody>();
-                rb.constraints = RigidbodyConstraints.FreezePositionZ | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationX;
+                child.gameObject.AddComponent<Rigidbody>();
 
                 child.gameObject.SetActive(false);
             }

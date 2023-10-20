@@ -8,7 +8,7 @@ namespace Core.Triggers
         {
             if (player)
             {
-                Debug.Log("Player Won");
+                Application.Quit();
             }
 
         }

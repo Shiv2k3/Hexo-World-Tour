@@ -1,11 +1,11 @@
-using UnityEngine;
 using UnityEditor;
+using UnityEngine;
 
-namespace Core.Editor
+namespace Core.Level
 {
     public class LevelPostprocessor : AssetPostprocessor
     {
-        void OnPostprocessMeshHierarchy(GameObject g)
+        private void OnPostprocessMeshHierarchy(GameObject g)
         {
             foreach (Transform child in g.transform)
             {

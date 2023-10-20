@@ -52,17 +52,17 @@ namespace Core.Player
         private IEnumerator WaitRespawn()
         {
             Dead = true;
-
-            Toggle();
-            yield return new WaitForSeconds(5);
-            Toggle();
-
             transform.position = CheckPoint;
             rigidBody.velocity = Vector3.zero;
             rigidBody.angularVelocity = Vector3.zero;
             accel = Vector2.zero;
             lastPlatformVelocity = Vector3.zero;
             lastJumped = 0;
+
+            yield return new WaitForFixedUpdate();
+            Toggle();
+            yield return new WaitForSeconds(1.5f);
+            Toggle();
 
             Dead = false;
         }
@@ -130,8 +130,10 @@ namespace Core.Player
             // Horizontal movement
             if (rigidBody.velocity.magnitude < terminalSpeed)
             {
+                bool moveRight = Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.W);
+                bool moveLeft = Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.S);
                 // Move right
-                if (Input.GetKey(KeyCode.D))
+                if (moveRight)
                 {
                     // Accel
                     if (Input.GetKey(KeyCode.LeftShift))
@@ -167,7 +169,7 @@ namespace Core.Player
                 }
 
                 // Move left
-                if (Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.D))
+                if (moveLeft && !moveRight)
                 {
                     // Accel
                     if (Input.GetKey(KeyCode.LeftShift))
