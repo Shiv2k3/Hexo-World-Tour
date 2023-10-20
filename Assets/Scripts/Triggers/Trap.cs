@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Core.Triggers
@@ -12,7 +13,6 @@ namespace Core.Triggers
         {
             foreach (Transform child in transform)
             {
-                child.gameObject.AddComponent<MeshCollider>().convex = true;
                 child.gameObject.AddComponent<Die>();
                 
                 child.gameObject.AddComponent<Rigidbody>();

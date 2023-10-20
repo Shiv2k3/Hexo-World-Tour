@@ -9,7 +9,13 @@ namespace Core.Triggers
         protected Character lastPlayer;
         private void OnTriggerEnter(Collider other)
         {
-            player = other.gameObject.GetComponent<Character>();
+            if (!player)
+                player = other.gameObject.GetComponent<Character>();
+        }
+        private void OnTriggerStay(Collider other)
+        {
+            if(!player)
+                player = other.gameObject.GetComponent<Character>();
         }
         private void OnTriggerExit(Collider other)
         {

@@ -53,11 +53,13 @@ namespace Core.Player
 
             target.position = player.transform.position;
             Vector3 smoothTarget = Vector3.Lerp(lastPosition, target.position, smoothing);
-            target.rotation = Quaternion.Euler(input);
+
+            if (Cursor.lockState == CursorLockMode.Locked)
+                target.rotation = Quaternion.Euler(input);
             transform.position = smoothTarget + target.forward * -distance;
-            transform.LookAt(smoothTarget);
-            
             lastPosition = target.position;
+
+            transform.LookAt(smoothTarget);
         }
     }
 }

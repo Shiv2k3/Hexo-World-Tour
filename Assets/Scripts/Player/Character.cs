@@ -47,6 +47,7 @@ namespace Core.Player
 
         public void Respawn()
         {
+            Debug.Log("Dead");
             StartCoroutine(WaitRespawn());
         }
         private IEnumerator WaitRespawn()
@@ -69,7 +70,7 @@ namespace Core.Player
         private void Toggle()
         {
             GetComponent<MeshRenderer>().enabled = !GetComponent<MeshRenderer>().enabled;
-            GetComponent<Collider>().enabled = !GetComponent<Collider>().enabled;
+            GetComponent<MeshCollider>().enabled = !GetComponent<MeshCollider>().enabled;
             GetComponent<Rigidbody>().isKinematic = !GetComponent<Rigidbody>().isKinematic;
         }
 

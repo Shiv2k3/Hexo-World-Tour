@@ -1,5 +1,3 @@
-using UnityEngine;
-
 namespace Core.Triggers
 {
     public class Win : Trigger
@@ -7,8 +5,8 @@ namespace Core.Triggers
         private void Update()
         {
             if (player)
-            {
-                Application.Quit();
+            {   
+
             }
 
         }
